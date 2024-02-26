@@ -8,18 +8,36 @@ import org.json.JSONObject;
 public class ClienteCorporativo extends Cliente
 {
     // TODO completar
-	public static final java.lang.String CORPORATIVO = "Corporativo"; 
-	public static final int	GRANDE	= 1;
-	public static final int	MEDIANA	= 2;
-	public static final int	PEQUENA	= 3;
-
-    /**
-     * Crea un nuevo objeto de tipo a partir de un objeto JSON.
-     * 
-     * El objeto JSON debe tener dos atributos: nombreEmpresa (una cadena) y tamanoEmpresa (un número).
-     * @param cliente El objeto JSON que contiene la información
-     * @return El nuevo objeto inicializado con la información
-     */
+	private static final String CORPORATIVO = "Corporativo";
+    public static final int PEQUENA = 0;
+    public static final int MEDIANA = 1;
+    public static final int GRANDE = 2;
+    
+    private String nombreEmpresa;
+    private int tamanoEmpresa;
+    
+    public ClienteCorporativo(String nombreEmpresa, int tamano) {
+        this.nombreEmpresa = nombreEmpresa;
+        this.tamanoEmpresa = tamano;
+    }
+    
+    public String getNombreEmpresa() {
+        return nombreEmpresa;
+    }
+    
+    public int getTamanoEmpresa() {
+        return tamanoEmpresa;
+    }
+    @Override
+    public String getTipoCliente() {
+        return CORPORATIVO;
+    }
+    
+    @Override
+    public String getIdentificador() {
+        return nombreEmpresa;
+    }
+    
     public static ClienteCorporativo cargarDesdeJSON( JSONObject cliente )
     {
         String nombreEmpresa = cliente.getString( "nombreEmpresa" );
@@ -27,10 +45,6 @@ public class ClienteCorporativo extends Cliente
         return new ClienteCorporativo( nombreEmpresa, tam );
     }
 
-    /**
-     * Salva este objeto de tipo ClienteCorporativo dentro de un objeto JSONObject para que ese objeto se almacene en un archivo
-     * @return El objeto JSON con toda la información del cliente corporativo
-     */
     public JSONObject salvarEnJSON( )
     {
         JSONObject jobject = new JSONObject( );
