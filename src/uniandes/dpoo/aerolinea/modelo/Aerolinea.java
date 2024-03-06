@@ -212,7 +212,8 @@ public class Aerolinea
     public void cargarAerolinea( String archivo, String tipoArchivo ) throws TipoInvalidoException, IOException, InformacionInconsistenteException
     {
         // TODO implementar
-    	
+    	IPersistenciaAerolinea cargador = CentralPersistencia.getPersistenciaAerolinea(tipoArchivo);
+        cargador.cargarAerolinea(archivo, this);
     }
 
     /**
@@ -225,6 +226,8 @@ public class Aerolinea
     public void salvarAerolinea( String archivo, String tipoArchivo ) throws TipoInvalidoException, IOException
     {
         // TODO implementar
+    	IPersistenciaAerolinea salvador = CentralPersistencia.getPersistenciaAerolinea(tipoArchivo);
+        salvador.salvarAerolinea(archivo, this);
     }
 
     /**
@@ -275,6 +278,27 @@ public class Aerolinea
     public void programarVuelo( String fecha, String codigoRuta, String nombreAvion ) throws Exception
     {
         // TODO Implementar el método
+    	Ruta ruta = getRuta(codigoRuta);
+        Avion avion = null;
+        for (Avion a : aviones) {
+            if (a.getNombre().equals(nombreAvion)) {
+                avion = a;
+                break;
+            }
+        }
+        if (avion == null) {
+            throw new Exception("No se encontró el avión con nombre: " + nombreAvion);
+        }
+        for (Vuelo vuelo : vuelos) {
+            if (vuelo.getFecha().equals(fecha)) {
+                throw new Exception("Ya hay un vuelo programado para la fecha: " + fecha);
+            }
+            if (vuelo.getAvion().equals(avion)) {
+                throw new Exception("El avión ya está programado para otro vuelo en la misma fecha");
+            }
+        }
+        Vuelo nuevoVuelo = new Vuelo(ruta, fecha, avion);
+        vuelos.add(nuevoVuelo);
     }
 
     /**
@@ -295,7 +319,13 @@ public class Aerolinea
     public int venderTiquetes( String identificadorCliente, String fecha, String codigoRuta, int cantidad ) throws VueloSobrevendidoException, Exception
     {
         // TODO Implementar el método
-        return -1;
+        Cliente cliente = getCliente(identificadorCliente);
+        Vuelo vuelo = getVuelo(codigoRuta, fecha);
+        if (vuelo == null) {
+            throw new Exception("No se encontró un vuelo para la ruta y fecha especificada");
+        }
+        int valorTotal = vuelo.venderTiquetes(cliente, cantidad);
+        return valorTotal;
     }
 
     /**
@@ -316,7 +346,9 @@ public class Aerolinea
     public String consultarSaldoPendienteCliente( String identificadorCliente )
     {
         // TODO Implementar el método
-        return "";
+    	Cliente cliente = getCliente(identificadorCliente);
+        int saldoPendiente = cliente.calcularValorTotalTiquetes();
+        return String.valueOf(saldoPendiente);
     }
 
 }
