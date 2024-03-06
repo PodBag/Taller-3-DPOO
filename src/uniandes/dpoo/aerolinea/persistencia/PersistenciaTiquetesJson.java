@@ -85,7 +85,7 @@ public class PersistenciaTiquetesJson implements IPersistenciaTiquetes
         {
             JSONObject cliente = jClientes.getJSONObject( i );
             String tipoCliente = cliente.getString( TIPO_CLIENTE );
-            Cliente nuevoCliente = null;
+            ClienteNatural nuevoCliente = null;
             // En las siguientes líneas se utilizan dos estrategias para implementar la carga de objetos: en la primera estrategia, la carga de los objetos
             // lo hace alguien externo al objeto que se carga; en la segunda estrategia, los objetos saben cargarse.
             // En general es una mala idea mezclar las dos estrategias: acá lo hacemos para ilustrar las dos posibilidades y mostrar las ventajas y desventajas de cada una.
